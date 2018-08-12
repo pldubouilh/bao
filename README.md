@@ -21,17 +21,21 @@ $ sudo bash newUser.sh self-hosted-service 8000 1234
 all done! conf file is called bao.conf
 ```
 
+### client setup
 
-### client config and build
-Default build comes with the cross platform systray tool. Using the cli tool is just a matter of commenting-out the ui bit in `main.go`.
+Either download release for [linux](https://github.com/pldubouilh/bao/releases/download/0.0.1/Linux.release) or [mac](https://github.com/pldubouilh/bao/releases/download/0.0.1/Mac.release.zip). Once started, bao will look for config files in `~/.ssh/bao/`.
 
-Build with the following commands. _note_: linux build would need `libgtk-3-dev` and `libappindicator3-dev`
+### client build
+Default build comes with the cross platform systray tool. Building the cli tool is just a matter of commenting-out the ui bit in `main.go`.
+
+Build with the following commands. The config file can either be hardcoded at build time - and if nothing's hardcoded, it'll look up in `src/nw/client.go` or if that's empty it'll look up in `~/.ssh/bao`.
 
 ```
 dep ensure
 go build main.go
 ```
 
+ _note linux_ : linux build would need `libgtk-3-dev` and `libappindicator3-dev`
 
-The config file can either be hardcoded into `src/nw/client.go` or if that's empty it'll look up in the folder `~/.ssh/bao/`.
+ _note mac_: mac build should be executed from a mac. Build file should be set into the `.app` skeleton in `builds/bao.app/Contents/MacOS/bao`
 
