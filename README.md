@@ -10,10 +10,10 @@ bao is a KISS ssh tunnel built in go. It automatically reconnects when the conne
   * for the clients: a nice and easy systray (or cli) app to reliably port-forward to your host
 
 
-## why ? 
+### why ?
 bao makes it simple to share a part of a host you run somewhere for others to use. Nice for running apps unexposed to the internet like a file webserver, your favourite rss reader, etc, and sharing data with the other end whether computer or human.
 
-## server config
+### server config
 Just run the `newUser.sh` script to spin a new user on your server with only access to the ports you specify.
 
 ```
@@ -22,7 +22,16 @@ all done! conf file is called bao.conf
 ```
 
 
-## client config
+### client config and build
+Default build comes with the cross platform systray tool. Using the cli tool is just a matter of commenting-out the ui bit in `main.go`.
+
+Build with the following commands. _note_: linux build would need `libgtk-3-dev` and `libappindicator3-dev`
+
+```
+dep ensure
+go build main.go
+```
+
+
 The config file can either be hardcoded into `src/nw/client.go` or if that's empty it'll look up in the folder `~/.ssh/bao/`.
 
-Default build comes with the cross platform systray tool. Using the cli tool is just a matter of commenting-out the ui bit in `main.go`.
