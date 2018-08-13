@@ -15,12 +15,14 @@ import (
 
 func copyConns(m string, i int, connA net.Conn, connB net.Conn) {
 	_, err := io.Copy(connA, connB)
-	if err != nil && i < 8 {
+	if err != nil && i < 3 {
 		i++
 		time.Sleep(time.Duration(i) * 200 * time.Millisecond)
 		copyConns(m, i, connA, connB)
 	} else if err != nil {
-		utils.PrintMaybe("m", err)
+		utils.PrintMaybe(m, err)
+		connA.Close()
+		connB.Close()
 	}
 }
 
