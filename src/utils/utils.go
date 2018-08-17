@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"os"
+	"strings"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"golang.org/x/crypto/ssh"
@@ -61,10 +63,13 @@ func parseConfig(f []byte) (*BaoConfig, error) {
 func ReadConfigs() *[]*BaoConfig {
 	var cs []*BaoConfig
 
-	path := "~/.ssh/bao"
-	path, ex := homedir.Expand(path)
-	path = path + "/"
-	files, er := ioutil.ReadDir(path)
+	pathLocal, _ := homedir.Expand("~/.ssh/bao")
+	pathLocal = pathLocal + "/"
+	filesLocal, er := ioutil.ReadDir(pathLocal)
+
+	pathMac, _ := os.Executable()
+	pathMac = strings.TrimSuffix(pathMac, "bao")
+	filesMac, erm := ioutil.ReadDir(pathMac)
 
 	if len(BaoConfigStr) != 0 {
 		fmt.Println("using embedded config")
@@ -72,10 +77,19 @@ func ReadConfigs() *[]*BaoConfig {
 		if erp == nil {
 			cs = append(cs, c)
 		}
-	} else if ex == nil && er == nil && len(files) != 0 {
-		fmt.Println("reading local files")
-		for _, f := range files {
-			payload, err := ioutil.ReadFile(path + f.Name())
+	} else if er == nil && len(filesLocal) != 0 {
+		fmt.Println("reading local filesLocal")
+		for _, f := range filesLocal {
+			payload, err := ioutil.ReadFile(pathLocal + f.Name())
+			c, erp := parseConfig(payload)
+			if err == nil && erp == nil {
+				cs = append(cs, c)
+			}
+		}
+	} else if erm == nil && len(filesMac) != 0 {
+		fmt.Println("reading local filesMac")
+		for _, f := range filesMac {
+			payload, err := ioutil.ReadFile(pathMac + f.Name())
 			c, erp := parseConfig(payload)
 			if err == nil && erp == nil {
 				cs = append(cs, c)
