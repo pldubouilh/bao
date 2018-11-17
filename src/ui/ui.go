@@ -2,8 +2,6 @@ package ui
 
 import (
 	"errors"
-	"os/exec"
-	"runtime"
 	"strings"
 	"time"
 
@@ -45,9 +43,6 @@ func watchEvts(m *systray.MenuItem, c *utils.BaoConfig) {
 }
 
 func onReady() {
-	// i, _ := ioutil.ReadFile("bao.ico")
-	// fmt.Println(i)
-
 	systray.SetIcon(BaoIcon())
 	cs := *utils.ReadConfigs()
 
@@ -64,7 +59,7 @@ func onReady() {
 	go func(f string) {
 		for {
 			<-mService.ClickedCh
-			openBrowser(f)
+			utils.OpenBrowser(f)
 		}
 	}(firstService)
 
@@ -74,7 +69,7 @@ func onReady() {
 	go func() {
 		for {
 			<-mInfo.ClickedCh
-			openBrowser("https://github.com/pldubouilh/bao")
+			utils.OpenBrowser("https://github.com/pldubouilh/bao")
 		}
 	}()
 
@@ -88,21 +83,10 @@ func onReady() {
 	nw.New(cs[0])
 	go func(f string) {
 		time.Sleep(2 * time.Second)
-		openBrowser(f)
+		utils.OpenBrowser(f)
 	}(firstService)
 }
 
 func onExit() {
 	utils.DieMaybe("", errors.New("time to go now"))
-}
-
-func openBrowser(url string) {
-	switch runtime.GOOS {
-	case "linux":
-		exec.Command("xdg-open", url).Start()
-	case "windows":
-		exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
-	case "darwin":
-		exec.Command("open", url).Start()
-	}
 }
