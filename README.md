@@ -8,7 +8,7 @@ bao is a KISS ssh tunnel built in go
 ### features
   * simple systray tool to connect connect to the remote machine
   * secure ; default ed25519 ssh crypto keys, and server key pinning
-  * a simple run-one server script to spin new SSH users with *no other* rights than port-forwarding
+  * a simple run-once server script to spin new SSH users with *no other* rights than port-forwarding
 
 ### why ?
 bao makes it simple to share a part of a host you run somewhere for others to use. It was initially designed to provide transport for [gossa](https://github.com/pldubouilh/gossa), but it can also serve for other purposes.
@@ -30,6 +30,7 @@ dep ensure
 go build main.go
 ```
 
- _note linux_ : linux build would need `libgtk-3-dev` and `libappindicator3-dev`a
+ _note linux_ : linux build would need `libgtk-3-dev` and `libappindicator3-dev`
+
  _note mac_: mac build should be executed from a mac. The built blob should be copied into the `.app` skeleton in `builds/bao.app/Contents/MacOS/bao`
 
