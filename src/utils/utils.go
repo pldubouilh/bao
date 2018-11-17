@@ -8,7 +8,10 @@ import (
 	"log"
 	"net"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
+	"time"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"golang.org/x/crypto/ssh"
@@ -118,7 +121,24 @@ func PrintMaybe(m string, err error) {
 
 // DummyEventListener spins a dummy event listener if not used (e.g. cli mode)
 func DummyEventListener(c *BaoConfig) {
+	<-c.Event
+	time.Sleep(2 * time.Second)
+	firstService := "http://127.0.0.1:" + strings.Split(c.Forwards[0], ":")[0]
+	OpenBrowser(firstService)
+
 	for {
 		<-c.Event // some event !
+	}
+}
+
+// OpenBrowser pops browser at url
+func OpenBrowser(url string) {
+	switch runtime.GOOS {
+	case "linux":
+		exec.Command("xdg-open", url).Start()
+	case "windows":
+		exec.Command("rundll32", "url.dll,FileProtocolHandler", url).Start()
+	case "darwin":
+		exec.Command("open", url).Start()
 	}
 }
